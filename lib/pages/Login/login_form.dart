@@ -11,23 +11,23 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   //getting data Entered by user
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passWordController = TextEditingController();
+  // TextEditingController emailController = TextEditingController();
+  // TextEditingController passWordController = TextEditingController();
 
-  void loginUser() async {
-    if (emailController.text.isNotEmpty && passWordController.text.isEmpty) {
-      var requestBody = {
-        "email": emailController.text,
-        "password": passWordController.text
-      };
+  // void loginUser() async {
+  //   if (emailController.text.isNotEmpty && passWordController.text.isEmpty) {
+  //     var requestBody = {
+  //       "email": emailController.text,
+  //       "password": passWordController.text
+  //     };
 
-      var response = await http.post(Uri.parse("registration"),
-          headers: {"Content-type": "application/json"},
-          body: jsonEncode(requestBody));
+  //     var response = await http.post(Uri.parse("registration"),
+  //         headers: {"Content-type": "application/json"},
+  //         body: jsonEncode(requestBody));
 
-      // var jsonResponse = jsonDecode(response.body);
-    }
-  }
+  //     // var jsonResponse = jsonDecode(response.body);
+  //   }
+  // }
 
   //Creating a key that identifies uniquely the form widget
   final _formKey = GlobalKey<FormState>();
@@ -101,6 +101,7 @@ class _LoginFormState extends State<LoginForm> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                     child: TextFormField(
+                      obscureText: true,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         labelText: "password",
@@ -141,6 +142,7 @@ class _LoginFormState extends State<LoginForm> {
                             )),
                           );
                         }
+                        Navigator.pushNamed(context, '/children');
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius:

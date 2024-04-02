@@ -13,9 +13,17 @@ class _ChildrenListState extends State<ChildrenList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: const <Widget>[
-        
-      ]),
+      appBar: AppBar(
+        title: const Text(
+          "Vos enfants",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color.fromRGBO(66, 160, 237, 1),
+        centerTitle: true,
+        elevation: 0,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(children: const <Widget>[]),
     );
   }
 }
