@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:parent_app_v3/pages/children_page/children_page.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -11,22 +13,59 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   //getting data Entered by user
-  // TextEditingController emailController = TextEditingController();
-  // TextEditingController passWordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passWordController = TextEditingController();
+  final bool _isNotValidate = false;
+  bool _passwordVisible = false;
+  bool _isLoading = false;
+  //Where to store the token
+  // late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    // initSharedPref();
+  }
+
+  // void initSharedPref() async {
+  //   prefs = await SharedPreferences.getInstance();
+  // }
 
   // void loginUser() async {
-  //   if (emailController.text.isNotEmpty && passWordController.text.isEmpty) {
-  //     var requestBody = {
-  //       "email": emailController.text,
-  //       "password": passWordController.text
-  //     };
+  //   // if (emailController.text.isNotEmpty && passWordController.text.isEmpty) {
+  //   var requestBody = {
+  //     "email": emailController.text,
+  //     "password": passWordController.text
+  //   };
 
-  //     var response = await http.post(Uri.parse("registration"),
-  //         headers: {"Content-type": "application/json"},
-  //         body: jsonEncode(requestBody));
+  //   var response = await http.post(
+  //       Uri.parse('http://10.0.2.2:8850/api/v1/auth/authenticate'),
+  //       headers: {"Content-type": "application/json"},
+  //       body: jsonEncode(requestBody));
 
-  //     // var jsonResponse = jsonDecode(response.body);
-  //   }
+  //   var jsonResponse = jsonDecode(response.body);
+  //   print("the response is $jsonResponse");
+  //   var myToken = jsonResponse['token'];
+  //   print(myToken);
+  //   // prefs.setString('token', myToken);
+  //   Navigator.push(
+  //       // ignore: use_build_context_synchronously
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ChildrenList(token: myToken)));
+
+  //   // if (jsonResponse['status']) {
+  //   //   var myToken = jsonResponse['token'];
+  //   //   prefs.setString('token', myToken);
+  //   //   Navigator.push(
+  //   //       // ignore: use_build_context_synchronously
+  //   //       context,
+  //   //       MaterialPageRoute(
+  //   //           builder: (context) => ChildrenList(token: myToken)));
+
+  //   //   //Navigate to Dashboard
+  //   // } else {
+  //   //    print("Not found");
+  //   // }
   // }
 
   //Creating a key that identifies uniquely the form widget
@@ -70,90 +109,82 @@ class _LoginFormState extends State<LoginForm> {
                     child: TextFormField(
                       //The validator receives the text entred by the user
                       keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
                       decoration: InputDecoration(
-                        labelText: "Email",
-                        labelStyle: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade400),
-                        isDense: true,
-                        prefixIcon: const Icon(Icons.email),
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(
-                                color: Colors.grey.shade400,
-                                fontWeight: FontWeight.w500),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      onChanged: (String value) {},
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'veuiller entrer votre Email';
-                        }
-                        return null; // for valid input
-                      },
+                          errorText: _isNotValidate
+                              ? "Entrer les informations correces"
+                              : null,
+                          labelText: "Email",
+                          labelStyle: TextStyle(
+                              fontSize: 16, color: Colors.grey.shade400),
+                          prefixIcon: const Icon(Icons.email),
+                          border: const OutlineInputBorder()),
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                     child: TextFormField(
-                      obscureText: true,
+                      controller: passWordController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
-                        labelText: "password",
-                        labelStyle: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade400),
-                        isDense: true,
-                        prefixIcon: const Icon(Icons.lock),
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(
-                                color: Colors.grey.shade400,
-                                fontWeight: FontWeight.w500),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                          errorText: _isNotValidate
+                              ? "Entrer les informations correces"
+                              : null,
+                          labelText: "password",
+                          border: const OutlineInputBorder(),
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          )),
+                      obscureText: !_passwordVisible,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      padding: const EdgeInsets.all(13),
-                      color: const Color.fromRGBO(66, 160, 237, 1),
-                      textColor: Colors.white,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                              'Connexion',
-                              style: TextStyle(
-                                  letterSpacing: BorderSide.strokeAlignCenter),
-                            )),
-                          );
-                        }
-                        Navigator.pushNamed(context, '/children');
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10.0), // Adjust as desired
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.blueAccent,
+                        ),
                       ),
-                      child: const Text(
-                        "connexion",
-                        style: TextStyle(fontSize: 23),
+                      child: SizedBox(
+                        width: double
+                            .infinity, // Set the button width to match the text fields
+                        height: 60,
+                        child: Center(
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  'Connexion',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               Container(
