@@ -7,7 +7,7 @@ class LoadChildren {
   static Future<List<Child>> fetchChildren(String token) async {
     // final response = await http.get(
     //   Uri.parse(''),
-    //   // headers: {'Authorization': 'Bearer $token'},
+      // headers: {'Authorization': 'Bearer $token'},
     // );
     AuthService service = AuthService();
     final response = await http.post(
@@ -16,7 +16,7 @@ class LoadChildren {
         "Content-type": "application/json",
         'Authorization': 'Bearer $token'
       },
-      body: jsonEncode({"email": 'namegabe23@gmail.com'}),
+      body: jsonEncode({"email": 'nshimiyimanaadolphe@gmail.com'}),
     );
 
     if (response.statusCode == 200) {

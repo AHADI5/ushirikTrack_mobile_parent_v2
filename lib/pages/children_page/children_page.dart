@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttermoji/fluttermoji.dart';
 import 'package:parent_app_v3/pages/children_page/children_service.dart';
+import 'package:parent_app_v3/pages/dashboard/dashboard_screen.dart';
 
 class ChildrenList extends StatefulWidget {
   final List<Child> children;
@@ -50,11 +52,9 @@ class _ChildrenListState extends State<ChildrenList> {
                       child: ListTile(
                         contentPadding:
                             const EdgeInsets.only(left: 2, right: 5),
-                        leading: const CircleAvatar(
-                          radius: 35.0,
-                          backgroundColor:
-                              Colors.grey, // Placeholder avatar color
-                          // You can add background image here
+                        leading: FluttermojiCircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          radius: 40,
                         ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,6 +86,13 @@ class _ChildrenListState extends State<ChildrenList> {
                         onTap: () {
                           // Handle tapping on a child item
                           // You can navigate to a detailed view or perform any other action here
+                          _navigateToDashBoard(
+                              context,
+                              child.schoolID,
+                              child.classId,
+                              child.studentID,
+                              '${child.studentName}  ${child.studentLastName}',
+                              '${child.classLevel} ième  ${child.className}');
                         },
                       ),
                     ),
@@ -98,4 +105,22 @@ class _ChildrenListState extends State<ChildrenList> {
       ),
     );
   }
+}
+
+//Function to navigate to dashboard screen
+
+void _navigateToDashBoard(BuildContext context, int schoolID, int classID,
+    int studentID, String name, String classRoom) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => StudentDashBoard(
+        schoolID: schoolID,
+        classID: classID,
+        studentID: studentID,
+        name: name,
+        classRoom: classRoom,
+      ),
+    ),
+  );
 }

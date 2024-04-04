@@ -1,6 +1,6 @@
 # parent_app_v3
 
-A new Flutter project.
+This is the mobile app for our .
 
 ## Getting Started
 
