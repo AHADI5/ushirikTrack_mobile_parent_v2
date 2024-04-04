@@ -1,7 +1,9 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:parent_app_v3/pages/Login/Auth_service.dart';
+import 'package:parent_app_v3/pages/Login/load_student_list.dart';
 import 'package:parent_app_v3/pages/children_page/children_page.dart';
+
+// import 'package:parent_app_v3/pages/children_page/children_page.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
@@ -13,62 +15,63 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   //getting data Entered by user
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passWordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passWordController = TextEditingController();
+  final AuthService _authService = AuthService();
   final bool _isNotValidate = false;
   bool _passwordVisible = false;
   bool _isLoading = false;
-  //Where to store the token
-  // late SharedPreferences prefs;
 
-  @override
-  void initState() {
-    super.initState();
-    // initSharedPref();
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      String? newToken = await _authService.login(
+          emailController.text, passWordController.text);
+      print("new token $newToken");
+
+      //get children list
+      final token = await _authService.getToken();
+      if (token != null) {
+        // Get children list
+        print("Your token is $token");
+        final children = await LoadChildren.fetchChildren(token);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChildrenList(children: children)));
+      } else {
+        // Handle case where token is null
+        // For example, show a message or prompt the user to log in again
+        print("Token is null");
+      }
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text('Failed to login $e'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
-  // void initSharedPref() async {
-  //   prefs = await SharedPreferences.getInstance();
-  // }
-
-  // void loginUser() async {
-  //   // if (emailController.text.isNotEmpty && passWordController.text.isEmpty) {
-  //   var requestBody = {
-  //     "email": emailController.text,
-  //     "password": passWordController.text
-  //   };
-
-  //   var response = await http.post(
-  //       Uri.parse('http://10.0.2.2:8850/api/v1/auth/authenticate'),
-  //       headers: {"Content-type": "application/json"},
-  //       body: jsonEncode(requestBody));
-
-  //   var jsonResponse = jsonDecode(response.body);
-  //   print("the response is $jsonResponse");
-  //   var myToken = jsonResponse['token'];
-  //   print(myToken);
-  //   // prefs.setString('token', myToken);
-  //   Navigator.push(
-  //       // ignore: use_build_context_synchronously
-  //       context,
-  //       MaterialPageRoute(builder: (context) => ChildrenList(token: myToken)));
-
-  //   // if (jsonResponse['status']) {
-  //   //   var myToken = jsonResponse['token'];
-  //   //   prefs.setString('token', myToken);
-  //   //   Navigator.push(
-  //   //       // ignore: use_build_context_synchronously
-  //   //       context,
-  //   //       MaterialPageRoute(
-  //   //           builder: (context) => ChildrenList(token: myToken)));
-
-  //   //   //Navigate to Dashboard
-  //   // } else {
-  //   //    print("Not found");
-  //   // }
-  // }
-
-  //Creating a key that identifies uniquely the form widget
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -152,7 +155,7 @@ class _LoginFormState extends State<LoginForm> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _isLoading ? null : _login,
                       style: ButtonStyle(
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(

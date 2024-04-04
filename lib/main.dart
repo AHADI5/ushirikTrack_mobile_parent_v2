@@ -10,9 +10,9 @@ void main() {
       fontFamily: 'Poppins', // Set default font family to Poppins
       // You can also specify individual font weights or styles if needed
       textTheme: const TextTheme(
-        
-        // Add more text styles as needed
-      ),
+
+          // Add more text styles as needed
+          ),
     ),
     routes: {
       '/': (context) => const Loading(),

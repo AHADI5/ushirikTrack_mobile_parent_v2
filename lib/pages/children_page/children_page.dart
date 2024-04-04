@@ -1,40 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:parent_app_v3/pages/children_page/children_service.dart';
 
 class ChildrenList extends StatefulWidget {
-  final token;
-  const ChildrenList({this.token, super.key});
+  final List<Child> children;
+  const ChildrenList({super.key, required this.children});
 
   @override
   State<ChildrenList> createState() => _ChildrenListState();
 }
 
 class _ChildrenListState extends State<ChildrenList> {
-  //Fetching data
-  late String email;
-  @override
-  void initState() {
-    super.initState();
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-    print(jwtDecodedToken);
-    email = jwtDecodedToken['sub'];
-    print(email);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Vos enfants",
-          style: TextStyle(color: Colors.white),
+        appBar: AppBar(
+          title: const Text('Vos enfant'),
+          elevation: 0,
+          foregroundColor: Colors.white,
         ),
-        backgroundColor: const Color.fromRGBO(66, 160, 237, 1),
-        centerTitle: true,
-        elevation: 0,
-        foregroundColor: Colors.white,
-      ),
-      // body: Text(email),
-    );
+        body: ListView.builder(
+            itemCount: widget.children.length,
+            itemBuilder: (context, index) {
+              final child = widget.children[index];
+              return ListTile(
+                title: Text(child.studentFirstName),
+                subtitle: Text(child.studentLastName),
+              );
+            }));
   }
 }
