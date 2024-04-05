@@ -10,13 +10,15 @@ class LoadChildren {
       // headers: {'Authorization': 'Bearer $token'},
     // );
     AuthService service = AuthService();
+
+    //Send a request to get student list 
     final response = await http.post(
       Uri.parse('http://10.0.2.2:8783/api/v1/student/parentEmail/students'),
       headers: {
         "Content-type": "application/json",
         'Authorization': 'Bearer $token'
       },
-      body: jsonEncode({"email": 'nshimiyimanaadolphe@gmail.com'}),
+      body: jsonEncode({"email": service.extractMailFormToken(token)}),
     );
 
     if (response.statusCode == 200) {

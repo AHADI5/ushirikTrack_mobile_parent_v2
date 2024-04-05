@@ -18,7 +18,7 @@ class AuthService {
 
   String extractMailFormToken(String token) {
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(token);
-    String? email = jwtDecoderToken['email'];
+    String? email = jwtDecoderToken['sub'];
     if (email == null) {
       throw Exception('Email not found in token $email');
     }

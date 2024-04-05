@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:parent_app_v3/pages/Login/Auth_service.dart';
 import 'package:parent_app_v3/pages/Login/load_student_list.dart';
 import 'package:parent_app_v3/pages/children_page/children_page.dart';
@@ -28,14 +29,17 @@ class _LoginFormState extends State<LoginForm> {
     });
 
     try {
-      String? newToken = await _authService.login(
+      //Log the user in 
+      await _authService.login(
           emailController.text, passWordController.text);
-      print("new token $newToken");
+ 
+      // print('the token content :  ${JwtDecoder.decode(newToken!)}');
 
       //get children list
       final token = await _authService.getToken();
       if (token != null) {
         // Get children list
+
         print("Your token is $token");
         final children = await LoadChildren.fetchChildren(token);
         Navigator.push(
