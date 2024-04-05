@@ -25,14 +25,15 @@ class _ChildrenListState extends State<ChildrenList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 15),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 15),
               child: Text(
                 'Vos enfants',
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 4.0),
+                style: Theme.of(context).textTheme.headlineLarge,
+                // style: TextStyle(
+                // fontSize: 25,
+                // fontWeight: FontWeight.w700,
+                // letterSpacing: 4.0),
               ),
             ),
             Expanded(
