@@ -94,6 +94,7 @@ class _LoginFormState extends State<LoginForm> {
                         child: Column(children: [
                       CircleAvatar(
                         backgroundImage: AssetImage('assets/logo.png'),
+                        backgroundColor: Colors.white,
                         radius: 50.0,
                       ),
                       Text(

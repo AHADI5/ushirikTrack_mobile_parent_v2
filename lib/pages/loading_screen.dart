@@ -10,9 +10,18 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   void getData() async {
     // ignore: avoid_print
-    await Future.delayed(const Duration(seconds: 2), () => {print("Hello")});
+    await Future.delayed(const Duration(seconds: 2), () => {print("Welcome")});
     Navigator.pushReplacementNamed(context, '/login');
   }
+
+  // TODO CHECK IF THE USER IS LOGGED IN 
+
+  /// if the user us logged in ,
+  ///  navigate hime to the list of student 
+  /// if not logged in navigate him to the loggin page 
+  /// 
+  ///
+
 
   @override
   void initState() {
@@ -25,7 +34,20 @@ class _LoadingState extends State<Loading> {
     return Scaffold(
       body: Center(
         child: Container(
-          child: const Text("Data is loading"),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+                 CircleAvatar(
+                        backgroundImage: AssetImage('assets/logo.png'),
+                        radius: 50.0,
+                        backgroundColor: Colors.white,
+                      ),
+              SizedBox( height:  20 ),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              )
+            ],
+          ),
         ),
       ),
     );

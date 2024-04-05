@@ -289,6 +289,51 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
           ),
         ),
       ),
+
+      //the bottom navigation menu
+      /**
+       * this will help the parent to navigate to principal
+       * pages of the app , dashboard, communication page , 
+       * homework and upshots
+       *  */
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.announcement), label: 'Communiqués'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.assignment), label: 'Devoirs'),
+          BottomNavigationBarItem(icon: Icon(Icons.note), label: 'Notes'),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Discipline'),
+        ],
+        currentIndex: 0,
+        selectedItemColor: Colors.blue,
+        useLegacyColorScheme: true,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        unselectedLabelStyle: const TextStyle(color: Colors.grey),
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              //TODO NAVIGATE TO HOME PAGE
+              break;
+            case 1:
+              //TODO NAVIGATE TO COMMUNIQUE PAGE
+              break;
+            case 2:
+              //TODO NAVIGATE TO DEVOIRS PAGE
+              break;
+            case 3:
+              //TODO NAVIGATE TO NOTES PAGE
+              break;
+            case 4:
+              //TODO NAVIGATE TO DISCIPLINE PAGE
+              break;
+
+            default:
+          }
+        },
+      ),
     );
   }
 }
