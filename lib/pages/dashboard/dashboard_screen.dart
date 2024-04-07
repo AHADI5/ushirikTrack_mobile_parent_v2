@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:parent_app_v3/pages/dashboard/dashoard_service.dart';
+import 'package:parent_app_v3/pages/dashboard/data.dart';
+import 'package:parent_app_v3/pages/dashboard/date_conversion.dart';
 
 class StudentDashBoard extends StatefulWidget {
   final int schoolID;
@@ -24,7 +27,17 @@ class StudentDashBoard extends StatefulWidget {
 }
 
 class _StudentDashBoardState extends State<StudentDashBoard> {
-  final List<int> numbers = [1, 2, 3, 4];
+  //Fetch communication data
+  late Future<List<Communication>> _communicationsFuture;
+  @override
+  void initState() {
+    super.initState();
+    //Load data
+    _communicationsFuture =
+        DashboardService.fetchCommunications(widget.schoolID);
+
+    print(_communicationsFuture);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +218,7 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
                   onPressed: () {
                     // Navigate to another screen to show more homeworks
                   },
-                  child: Text("Voir Plus"),
+                  child: const Text("Voir Plus"),
                 ),
                 const SizedBox(height: 5),
                 const Text(
@@ -219,34 +232,56 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
                 const SizedBox(height: 10),
                 SizedBox(
                   height: 120,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount:
-                        5, // Replace 5 with the actual number of communications
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          // Perform action when communication item is tapped
-                        },
-                        child: Container(
-                          width: 200,
-                          margin: const EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Communication Title"),
-                              Text("Description"),
-                              Text("Date Published"),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  child: FutureBuilder<List<Communication>>(
+                      future: _communicationsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          List<Communication>? communications = snapshot.data;
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: communications?.length ??
+                                0, // Replace 5 with the actual number of communications
+                            itemBuilder: (context, index) {
+                              Communication communication =
+                                  communications![index];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  // Perform action when communication item is tapped
+                                },
+                                child: Container(
+                                  width: 200,
+                                  margin: const EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(communication.title),
+                                      //Display one part of the communication content
+                                      Text(
+                                          '${communication.content.substring(0, 15)}...'),
+                                      //Display date time in the form of , one hour ago , two hours ago 
+                                      Text(relativeTime(
+                                          communication.publishedDate)),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      }),
                 ),
                 TextButton(
                   onPressed: () {

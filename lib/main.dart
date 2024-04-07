@@ -6,6 +6,7 @@ import './pages/loading_screen.dart';
 void main() {
   runApp(MaterialApp(
     // initialRoute: '/login',
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       fontFamily: 'Poppins', // Set default font family to Poppins
       // You can also specify individual font weights or styles if needed
@@ -17,6 +18,8 @@ void main() {
     routes: {
       '/': (context) => const Loading(),
       '/login': (context) => const LoginForm(),
+      
+  
     },
   ));
 }
